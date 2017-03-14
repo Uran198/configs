@@ -12,7 +12,9 @@ sudo apt-get -y install \
   keepassx\
   unrar\
   libxft2\    # Freetype (needed for matplotlib to work correctly)
-  libxft2-dev
+  libxft2-dev\
+  texlive\
+  texlive-lang-cyrillic
 
 pip install -U pip
 pip3 install -U pip

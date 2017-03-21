@@ -14,7 +14,8 @@ sudo apt-get -y install \
   libxft2\    # Freetype (needed for matplotlib to work correctly)
   libxft2-dev\
   texlive\
-  texlive-lang-cyrillic
+  texlive-lang-cyrillic\
+  texlive-latex-extra
 
 pip install -U pip
 pip3 install -U pip

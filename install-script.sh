@@ -15,7 +15,8 @@ sudo apt-get -y install \
   libxft2-dev\
   texlive\
   texlive-lang-cyrillic\
-  texlive-latex-extra
+  texlive-latex-extra\
+  p7zip-full
 
 pip install -U pip
 pip3 install -U pip

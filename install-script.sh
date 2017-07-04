@@ -31,6 +31,7 @@ vim +PluginInstall +qall
 
 git config --global user.name "Attila"
 git config --global user.email "uran198@gmail.com"
+git config --global push.default simple
 
 ln $HOME/configs/zshrc $HOME/.zshrc
 sudo chsh -s `which zsh` `whoami`

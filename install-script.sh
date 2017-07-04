@@ -19,10 +19,10 @@ sudo apt-get -y install \
   texlive-latex-extra\
   p7zip-full
 
-pip install -U pip
-pip3 install -U pip
-pip install virtualenv
-pip3 install virtualenv virtualenvwrapper
+sudo pip install -U pip
+sudo pip3 install -U pip
+sudo pip install virtualenv
+sudo pip3 install virtualenv virtualenvwrapper
 mkdir ~/.virtualenv
 
 cd ~
@@ -33,7 +33,7 @@ git config --global user.name "Attila"
 git config --global user.email "uran198@gmail.com"
 
 ln $HOME/configs/zshrc $HOME/.zshrc
-chsh -s /bin/zsh
+sudo chsh -s `which zsh` `whoami`
 
 if [ "$1" = "local" ]; then
 

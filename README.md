@@ -10,8 +10,4 @@ Keyboard->Application Shortcuts
 
 To install Skype
 ----------------
-Software & Updates->Other Software
-
-Enable `Canonical Partners`
-
-`sudo apt-get update && sudo apt-get install skype`
+Download and install from [Skype.com](https://skype.com)

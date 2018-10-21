@@ -23,8 +23,10 @@ export PATH="/usr/local/heroku/bin:$PATH" # Add Heroku
 export PATH="/home/attila/Projects/git/codeforces-helper:$PATH" # Add maker
 export PATH="/$PATH:/home/attila/Downloads/pmd-bin-5.4.1/bin/"
 export PATH="/$PATH:/usr/local/cuda-8.0/bin/"
+export PATH="$HOME/.cargo/bin:$PATH"
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64"
-export CUDA_HOME=/usr/local/cuda
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/home/attila/cudnn_install_path/cuda/lib64"
+export CUDA_HOME="/usr/local/cuda"
 
 # # add pyenv
 # export PATH="/home/attila/.pyenv/bin:$PATH"
@@ -40,7 +42,7 @@ export CUDA_HOME=/usr/local/cuda
 # virtualenvwrapper
 export WORKON_HOME=~/.virtualenvs
 export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-#export VIRTUALENVWRAPPER_VIRTUALENV=virtualenv-3.4
+# export VIRTUALENVWRAPPER_VIRTUALENV=virtualenv-3.4
 source /usr/local/bin/virtualenvwrapper.sh
 
 # # Enable bash autocompetion for coala
@@ -48,6 +50,9 @@ source /usr/local/bin/virtualenvwrapper.sh
 # bashcompinit
 # workon coala_test
 # eval "$(register-python-argcomplete `which coala`)"
+
+# Enable pyhton3 random-stuff environment by default
+workon random_stuff
 
 
 # virtualenv

@@ -18,7 +18,8 @@ sudo apt-get -y install \
   texlive-lang-cyrillic\
   texlive-latex-extra\
   p7zip-full\
-  silversearcher-ag
+  silversearcher-ag\
+  xclip
 
 sudo pip install -U pip
 sudo pip3 install -U pip

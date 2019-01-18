@@ -36,7 +36,7 @@ git config --global user.email "uran198@gmail.com"
 git config --global push.default simple
 
 ln -s $HOME/configs/zshrc $HOME/.zshrc
-sudo chsh -s `which zsh` `whoami`
+chsh -s `which zsh`
 
 if [ "$1" = "local" ]; then
 

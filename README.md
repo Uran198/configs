@@ -1,6 +1,6 @@
 # configs
 
-If installing locally use `local` argument for the 'install-script.sh'.
+To configure and install run 'install-script.sh'.
 
 To Make Touchpad toggle work
 ----------------------------

@@ -39,22 +39,6 @@ sudo chsh -s `which zsh` `whoami`
 
 if [ "$1" = "local" ]; then
 
-sudo tee -a /etc/fstab <<EOF
-# /dev/sda11
-UUID=bb349b71-64d9-42cd-96bd-abc2ccb5a8bb /media/data ext4              rw,relatime,data=ordered           0 2
-EOF
-
-# Create links to default directories
-sudo mount /dev/sda11 /media/data
-ln -s /media/data/data/read_this $HOME/read_this
-ln -s /media/data/data/notex $HOME/notex
-ln -s /media/data/data $HOME/data
-
-files=( "Documents" "Downloads" "Music" "Pictures" "Projects" )
-for fname in "${files[@]}"
-do
-    rmdir $HOME/$fname
-    ln -s /media/data/data/$fname $HOME/$fname
-done
+echo local
 
 fi # "$1" = "local"

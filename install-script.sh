@@ -9,7 +9,7 @@ sudo apt-get -y install \
   python-pip\
   python3-pip\
   zsh\
-  python-gpgme\
+  python-gpg\
   keepassx\
   unrar\
   libxft2\

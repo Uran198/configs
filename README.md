@@ -11,3 +11,7 @@ Keyboard->Application Shortcuts
 To install Skype
 ----------------
 Download and install from [Skype.com](https://skype.com)
+
+To install Dropbox
+------------------
+Download and install from [Dropbox.com](https://www.dropbox.com/install-linux)

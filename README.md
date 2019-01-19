@@ -1,6 +1,9 @@
 # configs
 
-To configure and install run 'install-script.sh'.
+* Run 'install-script.sh'.
+* Setup ssh for Github, use ssh-agent to access keys with password. Keys
+  should be passphrase protected.
+
 
 To Make Touchpad toggle work
 ----------------------------

@@ -3,7 +3,8 @@
 * Run 'install-script.sh'.
 * Setup ssh for Github, use ssh-agent to access keys with password. Keys
   should be passphrase protected.
-
+* To open terminal maximized run `exo-preferred-applications` and change
+  TerminalEmulator to `/usr/bin/xfce4-terminal --maximize`
 
 To Make Touchpad toggle work
 ----------------------------

@@ -1,126 +1,136 @@
-# TODO: Clean this file
-# TODO: Read arch linux docs https://wiki.archlinux.org/index.php/zsh#Making_Zsh_your_default_shell
+# Set options:
+# Options are returned to what they were after a function call.
+setopt LOCAL_OPTIONS
+# Better prompt parameters, in particular, can use vcs_info.
+setopt PROMPT_SUBST
+# Do not show an errors on one of the globs.
+setopt CSH_NULL_GLOB
+# Verify commands with !!* before executing.
+setopt HIST_VERIFY
+# Multiple sessions save history as commands are executed (and not on exit),
+# but doesn't read history from other shells.
+setopt INC_APPEND_HISTORY
+# Ignore adjacent duplicates.
+setopt HIST_IGNORE_DUPS
+# Do not show duplicates in searches.
+setopt HIST_FIND_NO_DUPS
+# Correct commands.
+setopt CORRECT
+# Menu completion.
+setopt MENU_COMPLETE
 
-# Lines configured by zsh-newuser-install
+# Keep long history.
 HISTFILE=~/.histfile
-HISTSIZE=1000
-SAVEHIST=1000
-bindkey -e
-# End of lines configured by zsh-newuser-install
-# The following lines were added by compinstall
-zstyle :compinstall filename '/home/attila/.zshrc'
+HISTSIZE=10000
+SAVEHIST=10000
 
-# End of lines added by compinstall
+# Get information about VCS.
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' enable git svn p4 hg
+zstyle ':vcs_info:*' formats '[%F{142}%s%f@%F{112}%B%b%%b%f] '
+
+precmd() {
+    vcs_info
+    # Change title to display current directory.
+    print -P '\e]2;%~\a'
+}
+
+# Set nice prompts.
+# ^Xu is a reminder of a shortcut to undo !! expansion after <TAB> and other
+# stuff.
+PS1='
+%K{236}%F{112}%D{%b %d %H:%M:%S} %f %n@%M %F{174}%~
+%k%f^Xu${vcs_info_msg_0_}%B(%h) %# %b'
+
+# Need to call to init when first started.
+# Cannot call zle-line-init, or zle-keymap-select, because they would error on
+# zle.
+function setRPS1 {
+    # Show return code of the last call if error and vi bindings mode.
+    RPS1="%(?..%F{160}err(%?%)) %F{221}${${KEYMAP/(viins|main)/--INSERT--}/vicmd/[NORMAL]}%f"
+}
+function zle-keymap-select zle-line-init {
+    setRPS1
+    zle reset-prompt
+}
+setRPS1
+
+zle -N zle-keymap-select
+zle -N zle-line-init
+
+# Use emacs bindings for insert mode. Still can get to vicmd with <Esc> or ^[.
+bindkey -e
+
+bindkey -a '?' history-incremental-search-backward
+bindkey -a '/' history-incremental-search-forward
+# Map forward backward to ^arrows.
+bindkey "^[[1;5D" backward-word
+bindkey "^[[1;5C" forward-word
+# Reverse match with Shift+Tab.
+bindkey "^[[Z" reverse-menu-complete
+# Use convenient escape.
+bindkey '^[' vi-cmd-mode
+
+# Small lag after changing keymap.
+export KEYTIMEOUT=1
+
+# Disable XON/XOFF flow control, that makes ^Q and ^S unavailable.
+# ^Q is useful for push-line.
+stty -ixon
+
 autoload -Uz compinit
 compinit
 
-autoload -U promptinit
-promptinit
-prompt clint
+# Have menu-like completion.
+zstyle ':completion:*' menu select
 
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-export PATH="/usr/local/heroku/bin:$PATH" # Add Heroku
-export PATH="/home/attila/Projects/git/codeforces-helper:$PATH" # Add maker
-export PATH="/$PATH:/home/attila/Downloads/pmd-bin-5.4.1/bin/"
-export PATH="/$PATH:/usr/local/cuda-8.0/bin/"
-export PATH="$HOME/.cargo/bin:$PATH"
-export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64"
-export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/home/attila/cudnn_install_path/cuda/lib64"
-export CUDA_HOME="/usr/local/cuda"
+# Use cache to speed things up.
+zstyle ':completion::complete:*' use-cache 1
 
-# # add pyenv
-# export PATH="/home/attila/.pyenv/bin:$PATH"
-# eval "$(pyenv init -)"
-# eval "$(pyenv virtualenv-init -)"
+# Enable approximate completions.
+zstyle ':completion:*' completer _complete _ignored _approximate
 
+# Verbose completion results.
+zstyle ':completion:*' verbose yes
 
-#   # added by Anaconda3 2.3.0 installer
-#   export PATH="/home/attila/anaconda3/bin:$PATH"
-#   # need this because vim was compiled with system python
-#   export PYTHONPATH=/home/attila/anaconda3/lib/python3.4/site-packages
+# Group results by category.
+zstyle ':completion:*' group-name ''
 
-# virtualenvwrapper
-export WORKON_HOME=~/.virtualenvs
-export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-# export VIRTUALENVWRAPPER_VIRTUALENV=virtualenv-3.4
-source /usr/local/bin/virtualenvwrapper.sh
+# Set pretty descriptions for categories.
+zstyle ':completion:*:descriptions' format '%U%B%d%b%u'
+zstyle ':completion:*:messages' format '%U%B%d%b%u'
 
-# # Enable bash autocompetion for coala
-# autoload bashcompinit
-# bashcompinit
-# workon coala_test
-# eval "$(register-python-argcomplete `which coala`)"
+# Show when waiting for completion.
+zstyle ':completion:*' show-completer true
 
-# Enable pyhton3 random-stuff environment by default
-workon random_stuff
+# Use ls colors for path completion.
+zstyle ':completion:*:default' list-colors ''
 
+# Path entries should be unique.
+typeset -U path
+# Rust package manager.
+path=(~/.cargo/bin $path)
 
-# virtualenv
-# source /home/attila/.virtualenvs/qa-project/bin/activate
-# export PYTHONPATH=/home/attila/.virtualenvs/qa-project/lib/python3.4/site-packages/
-# source /home/attila/.virtualenvs/djangodev/bin/activate
-# export PYTHONPATH=/home/attila/.virtualenvs/djangodev/lib/python3.4/site-packages/
-# source /home/attila/.virtualenvs/coala/bin/activate
-# export PYTHONPATH=/home/attila/.virtualenvs/coala/lib/python3.4/site-packages/
-# source /home/attila/.virtualenvs/organizator/bin/activate
-# export PYTHONPATH=/home/attila/.virtualenvs/organizator/lib/python3.4/site-packages/
+# virtualenvwrapper setup.
+local venv_wrapper=/usr/local/bin/virtualenvwrapper_lazy.sh
+if [[ -r $venv_wrapper ]]; then
+    export WORKON_HOME=~/.virtualenvs
+    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+    # TODO: Since I don't use it much, not sure if it's really worth to have it in
+    # prompt, since it clutters stuff a little bit. Here is how to make it more
+    # custom:
+    # https://stackoverflow.com/questions/10406926/how-do-i-change-the-default-virtualenv-prompt/20026992
+    # Disable prompt changes.
+    export VIRTUAL_ENV_DISABLE_PROMPT=1
 
-# remove anoying pop-ups
-unset SSH_ASKPASS
+    # Use lazy for faster zsh startup.
+    source /usr/local/bin/virtualenvwrapper_lazy.sh
 
-## added by Anaconda 2.3.0 installer
-#export PATH="/home/attila/anaconda/bin:$PATH"
+    # Generic GNU command completion that works with everything that has --help.
+    compdef _gnu_generic mkvirtualenv
+fi
 
-
-# Backwardkill bash-like
-autoload -U select-word-style
-select-word-style bash
-
-#-------- grml-zsh-config handeles this and more
-## command alias
+# Command aliases.
 alias ll='ls -f -F --color=auto -lh'
 alias ls='ls -F --color=auto'
 alias grep='grep --color=auto'
-
-## create a zkbd compatible hash;
-## to add other keys to this hash, see: man 5 terminfo
-#typeset -A key
-#
-#key[Home]=${terminfo[khome]}
-#
-#key[End]=${terminfo[kend]}
-#key[Insert]=${terminfo[kich1]}
-#key[Delete]=${terminfo[kdch1]}
-#key[Up]=${terminfo[kcuu1]}
-#key[Down]=${terminfo[kcud1]}
-#key[Left]=${terminfo[kcub1]}
-#key[Right]=${terminfo[kcuf1]}
-#key[PageUp]=${terminfo[kpp]}
-#key[PageDown]=${terminfo[knp]}
-#
-## setup key accordingly
-#[[ -n "${key[Home]}"     ]]  && bindkey  "${key[Home]}"     beginning-of-line
-#[[ -n "${key[End]}"      ]]  && bindkey  "${key[End]}"      end-of-line
-#[[ -n "${key[Insert]}"   ]]  && bindkey  "${key[Insert]}"   overwrite-mode
-#[[ -n "${key[Delete]}"   ]]  && bindkey  "${key[Delete]}"   delete-char
-#[[ -n "${key[Up]}"       ]]  && bindkey  "${key[Up]}"       up-line-or-history
-#[[ -n "${key[Down]}"     ]]  && bindkey  "${key[Down]}"     down-line-or-history
-#[[ -n "${key[Left]}"     ]]  && bindkey  "${key[Left]}"     backward-char
-#[[ -n "${key[Right]}"    ]]  && bindkey  "${key[Right]}"    forward-char
-#[[ -n "${key[PageUp]}"   ]]  && bindkey  "${key[PageUp]}"   beginning-of-buffer-or-history
-#[[ -n "${key[PageDown]}" ]]  && bindkey  "${key[PageDown]}" end-of-buffer-or-history
-#
-## Finally, make sure the terminal is in application mode, when zle is
-## active. Only then are the values from $terminfo valid.
-#if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
-#    function zle-line-init () {
-#        printf '%s' "${terminfo[smkx]}"
-#    }
-#    function zle-line-finish () {
-#        printf '%s' "${terminfo[rmkx]}"
-#    }
-#    zle -N zle-line-init
-#    zle -N zle-line-finish
-#fi
-
-rvm_autoupdate_flag=2

@@ -19,3 +19,7 @@ Download and install from [Skype.com](https://skype.com)
 To install Dropbox
 ------------------
 Download and install from [Dropbox.com](https://www.dropbox.com/install-linux)
+
+Improvement ideas
+-----------------
+Create intent-based configuration. Configuration to include list of PPAs & applications (with versions maybe) to be installed. (Periodic) demon should run, and on each change to configuration apply intent. Software updates should be automatic with an option of simple rollback if new versions don't work properly (all versions should be named and dated). Ideally shouldn't lead to a possible sudo privilage escalation (is it possible to install things sudo-less?).

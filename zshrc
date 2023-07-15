@@ -16,8 +16,9 @@ setopt HIST_IGNORE_DUPS
 setopt HIST_FIND_NO_DUPS
 # Correct commands.
 setopt CORRECT
-# Menu completion.
-setopt MENU_COMPLETE
+
+# Don't do automatic substitution of the first match.
+# setopt MENU_COMPLETE
 
 # Keep long history.
 HISTFILE=~/.histfile
@@ -88,7 +89,9 @@ zstyle ':completion:*' menu select
 zstyle ':completion::complete:*' use-cache 1
 
 # Enable approximate completions.
-zstyle ':completion:*' completer _complete _ignored _approximate
+# FIXME Can be VERY slow when trying completing long and complex directories
+#zstyle ':completion:*' completer _complete _ignored _approximate
+zstyle ':completion:*' completer _complete _ignored
 
 # Verbose completion results.
 zstyle ':completion:*' verbose yes
@@ -110,27 +113,71 @@ zstyle ':completion:*:default' list-colors ''
 typeset -U path
 # Rust package manager.
 path=(~/.cargo/bin $path)
-
-# virtualenvwrapper setup.
-local venv_wrapper=/usr/local/bin/virtualenvwrapper_lazy.sh
-if [[ -r $venv_wrapper ]]; then
-    export WORKON_HOME=~/.virtualenvs
-    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-    # TODO: Since I don't use it much, not sure if it's really worth to have it in
-    # prompt, since it clutters stuff a little bit. Here is how to make it more
-    # custom:
-    # https://stackoverflow.com/questions/10406926/how-do-i-change-the-default-virtualenv-prompt/20026992
-    # Disable prompt changes.
-    export VIRTUAL_ENV_DISABLE_PROMPT=1
-
-    # Use lazy for faster zsh startup.
-    source /usr/local/bin/virtualenvwrapper_lazy.sh
-
-    # Generic GNU command completion that works with everything that has --help.
-    compdef _gnu_generic mkvirtualenv
-fi
+# go binary
+path=(/usr/local/go/bin $path)
+path=($(go env GOPATH)/bin $path)
+# pip
+path=(~/.local/bin $path)
 
 # Command aliases.
 alias ll='ls -f -F --color=auto -lh'
 alias ls='ls -F --color=auto'
 alias grep='grep --color=auto'
+
+# Test slow completion.
+tsc_hello() {
+    echo "Test completion: Hello World: $@"
+}
+_tsc_hello_compl() {
+    sleep 2
+    _arguments "1:This is a test first argument:(ololololo right)"
+}
+
+compdef _tsc_hello_compl tsc_hello
+
+
+to_image() {
+    # "FreeMono" -border 300
+    convert -size 15000x30000 xc:white -density 300 -font "Courier-BoldOblique" -pointsize 12 -interline-spacing 60 -fill black -annotate +150+150 "@$1" -trim  -bordercolor "#FFF" -border 300 +repage "$2"
+}
+
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# python alias
+# alias python=python3.7
+# alias pip=pip3.7
+
+
+
+# -----------------------------
+source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+# Enables fzf
+source /usr/share/doc/fzf/examples/key-bindings.zsh
+source /usr/share/doc/fzf/examples/completion.zsh
+
+export TERM='xterm-256color'
+export EDITOR=vim
+
+# Tmux windows renaming
+function tmux_title() {
+  tmux rename-window "$(basename `pwd`)"
+}
+if [[ ! -z "$TMUX" ]]; then
+  precmd_functions+=(tmux_title)
+fi
+
+start_work() {
+    tmux new-session -A -s work
+}
+zle -N start_work{,}
+# Ctrl+s to start work.
+bindkey -s '^s' 'start_work\n'
+
+export PATH=$HOME/go/bin:$PATH
+
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"

@@ -3,7 +3,7 @@
 
 export ZSH="$HOME/.oh-my-zsh"
 
-ZSH_THEME="robbyrussell"
+ZSH_THEME="candy"
 
 # Uncomment the following line if pasting URLs and other text is messed up.
 # DISABLE_MAGIC_FUNCTIONS="true"
@@ -68,4 +68,36 @@ export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
-path=($path ~/go/go/bin)
+path=($path ~/go/go/bin ~/go/bin ~/.cargo/bin)
+
+# Use ag for fzf.
+export FZF_DEFAULT_COMMAND="ag -i --nocolor --nogroup --hidden \
+  --ignore .git \
+  --ignore .svn \
+  --ignore .hg \
+  --ignore .DS_Store \
+  --ignore \"**/*.pyc\" \
+  --ignore .git5_specs \
+  --ignore review \
+  --ignore vendor \
+  --ignore node_modules \
+  -g ''"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS} --bind 'alt-a:select-all,alt-d:deselect-all'"
+
+
+# Use fzf for gco if no arguments are set.
+# By default gco is an alias to git checkout.
+unalias gco
+gco() {
+  if [[ "$#" != 0 ]]
+  then
+    git checkout "${*}"
+  else
+    git branch | grep -v "^\*" | fzf --height=20% --reverse --info=inline | xargs git checkout
+  fi
+}
+compdef _git gco=git-checkout
+
+
